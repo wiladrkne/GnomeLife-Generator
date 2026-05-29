@@ -12,9 +12,13 @@
     .pipeline-label { text-align: center; color: #4a6b4a; font-size: 0.75em; letter-spacing: 3px; margin-bottom: 18px; text-transform: uppercase; }
     
     /* ── CONFIG BAR ── */
-    .config-bar { max-width: 1200px; margin: 0 auto 20px auto; background: #16241c; border: 1px solid #2d4234; border-radius: 6px; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; gap: 15px; }
+    .config-bar { max-width: 1200px; margin: 0 auto 20px auto; background: #16241c; border: 1px solid #2d4234; border-radius: 6px; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; gap: 15px; flex-wrap: wrap; }
     .config-title { font-size: 0.85em; color: #dcb36d; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; }
     .engine-select { background: #0d140f; color: #e2e8df; border: 1px solid #3a5a3a; padding: 6px 12px; border-radius: 4px; font-size: 0.85em; cursor: pointer; outline: none; }
+    @media (max-width: 480px) {
+        .config-bar > div { width: 100%; }
+        .engine-select { width: 100%; box-sizing: border-box; }
+    }
     
     .container { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; max-width: 1200px; margin: 0 auto; }
 
@@ -297,7 +301,11 @@
 
     // ── OPERATIONS ENGINE ────────────────────────────────────────────────────
     function clearAll() {
-        document.querySelectorAll('.trait-checkbox').forEach(cb => cb.checked = false);
+        pipeline.forEach(cat => {
+            const box = document.querySelector(`.category-box[data-key="${cat.key}"]`);
+            if (box.dataset.locked === "true") return;
+            box.querySelectorAll('.trait-checkbox').forEach(cb => cb.checked = false);
+        });
         generatePrompt();
     }
 
